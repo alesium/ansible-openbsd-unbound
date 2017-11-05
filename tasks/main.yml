@@ -1,0 +1,25 @@
+- name: copy unbound.conf
+  tags: openbsd-unbound
+  template: src="{{ openbsd_unbound_conf_src }}" dest="{{ openbsd_unbound_conf_dest }}" mode="0644" owner="{{ openbsd_unbound_user }}" group="{{ openbsd_unbound_group }}" backup="yes"
+  notify: enable unbound
+
+- name: download and anchor root cache
+  tags: openbsd-unbound
+  block:
+    - get_url:
+        url: "{{ openbsd_unbound_named_cache_src }}"
+        dest: "{{ openbsd_unbound_named_cache_dest }}"
+        mode: "0600"
+        owner: "{{ openbsd_unbound_user }}"
+        group: "{{ openbsd_unbound_group }}"
+        backup: "yes"
+        force: "yes"
+    - copy:
+        src: "{{ openbsd_unbound_anchor_root_key_src }}"
+        dest: "{{ openbsd_unbound_anchor_root_key_dest }}"
+        mode: "0600"
+        owner: "{{ openbsd_unbound_user }}"
+        group: "{{ openbsd_unbound_group }}"
+        backup: "yes"
+    - command: '"{{ openbsd_unbound_anchor_command }}" -a "{{ openbsd_unbound_anchor_root_key_dest }}"'
+  when: openbsd_unbound_named_cache_src is defined

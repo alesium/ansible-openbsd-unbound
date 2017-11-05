@@ -1,0 +1,6 @@
+- name: enable unbound
+  tags: openbsd-unbound 
+  service:
+    name: "{{ openbsd_unbound_service_name }}"
+    enabled: "yes"
+    state: "started"
