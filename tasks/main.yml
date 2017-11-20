@@ -23,4 +23,3 @@
         backup: "yes"
     - command: '"{{ openbsd_unbound_anchor_command }}" -a "{{ openbsd_unbound_anchor_root_key_dest }}"'
   when: openbsd_unbound_named_cache_src is defined
-  notify: restart unbound
